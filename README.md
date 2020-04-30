@@ -13,11 +13,11 @@ This work is 3D lidar based Simultaneous Localization And Mapping (SLAM), includ
 
 ### 1.2. Ground Truth Comparison
 <p align='center'>
-<img src="https://github.com/wh200720041/iscloam/blob/master/img/kitti00.png"/>
+<img src="https://github.com/wh200720041/iscloam/blob/master/img/KITTI00.png"/>
 </p>
 `KITTI sequence 00`
 <p align='center'>
-<img src="https://github.com/wh200720041/iscloam/blob/master/img/kitti05.png"/>
+<img src="https://github.com/wh200720041/iscloam/blob/master/img/KITTI05.png"/>
 `KITTI sequence 05`
 </p>
 
