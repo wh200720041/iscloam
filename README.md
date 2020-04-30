@@ -1,7 +1,7 @@
 # ISCLOAM 
 ## Intensity Scan Context based Full SLAM Implementation (ISC-LOAM) 
 
-This work is 3D lidar based Simultaneous Localization And Mapping (SLAM), including both front-end and back-end SLAM. 
+This work is 3D lidar based Simultaneous Localization And Mapping (SLAM), including both front-end and back-end SLAM, at 20Hz. 
 
 **Author:** [Wang Han](http://wanghan.pro), Nanyang Technological University, Singapore
 
@@ -26,7 +26,6 @@ Platform: Intel® Core™ i7-8700 CPU @ 3.20GHz
 |----------------------------------------------|----------------------------|------------------------|
 | `KITTI sequence 00`                          | 0.24%                      | 0.51%                  |
 | `KITTI sequence 05`                          | 0.22%                      | 0.93%                  |
-
 
 ## 2. Prerequisites
 ### 2.1 **Ubuntu** and **ROS**
