@@ -16,7 +16,8 @@ This work is 3D lidar based Simultaneous Localization And Mapping (SLAM), includ
 <img src="https://github.com/wh200720041/iscloam/blob/master/img/KITTI00.png" width = 45% />
 <img src="https://github.com/wh200720041/iscloam/blob/master/img/KITTI05.png" width = 45% />
 </p>
-      KITTI sequence 00              KITTI sequence 05
+
+              KITTI sequence 00              KITTI sequence 05
 
 Platform: Intel® Core™ i7-8700 CPU @ 3.20GHz 
 Localization error:
