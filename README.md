@@ -19,12 +19,14 @@ This work is 3D lidar based Simultaneous Localization And Mapping (SLAM), includ
 
                       KITTI sequence 00                                  KITTI sequence 05
 
+### 1.3. Localization error
 Platform: Intel® Core™ i7-8700 CPU @ 3.20GHz 
-Localization error:
+<p align='center'>
 | Dataset                                      | ISCLOAM                    | FLOAM                  |
 |----------------------------------------------|----------------------------|------------------------|
 | `KITTI sequence 00`                          | 0.24%                      | 0.51%                  |
 | `KITTI sequence 05`                          | 0.22%                      | 0.93%                  |
+</p>
 
 ## 2. Prerequisites
 ### 2.1 **Ubuntu** and **ROS**
@@ -47,11 +49,11 @@ Follow [OPENCV Installation](https://opencv.org/releases/).
 ## 3. Build 
 ### 3.1 Clone repository:
 ```
-    cd ~/catkin_ws/src
-    git clone https://github.com/wh200720041/iscloam.git
-    cd ..
-    catkin_make
-    source ~/catkin_ws/devel/setup.bash
+cd ~/catkin_ws/src
+git clone https://github.com/wh200720041/iscloam.git
+cd ..
+catkin_make
+source ~/catkin_ws/devel/setup.bash
 ```
 ### 3.2 Download test rosbag
 Download [KITTI sequence 05](https://drive.google.com/open?id=18ilF7GZDg2tmT6sD5pd1RjqO0XJLn9Mv) or [KITTI sequence 07](https://drive.google.com/open?id=1VpoKm7f4es4ISQ-psp4CV3iylcA4eu0-)
@@ -63,13 +65,13 @@ sudo apt-get install unzip
 
 And then copy the file 2011_09_30_0018.bag into ~/catkin_ws/src/iscloam/dataset/ (this may take a few minutes to unzip the file)
 ```
-	cd ~/catkin_ws/src/iscloam/dataset/
-	unzip ~/Downloads/2011_09_30_0018.zip
+cd ~/catkin_ws/src/iscloam/dataset/
+unzip ~/Downloads/2011_09_30_0018.zip
 ```
 
 ### 3.3 Launch ROS
 ```
-    roslaunch iscloam iscloam.launch
+roslaunch iscloam iscloam.launch
 ```
 
 ## 4. Test other sequence
