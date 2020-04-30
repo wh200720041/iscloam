@@ -12,7 +12,7 @@ This work is 3D lidar based Simultaneous Localization And Mapping (SLAM), includ
 </p>
 
 ### 1.2. Ground Truth Comparison
-Green:  Red: Ground Truth
+Green: ISCLOAM        Red: Ground Truth
 <p align='center'>
 <img src="https://github.com/wh200720041/iscloam/blob/master/img/KITTI00.png" width = 45% />
 <img src="https://github.com/wh200720041/iscloam/blob/master/img/KITTI05.png" width = 45% />
