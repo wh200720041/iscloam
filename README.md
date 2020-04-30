@@ -6,6 +6,20 @@ This work is 3D lidar based Simultaneous Localization And Mapping (SLAM), includ
 **Author:** [Wang Han](http://wanghan.pro), Nanyang Technological University, Singapore
 
 ## 1. Evaluation
+### 1.1. Example
+<p align='center'>
+<img src="https://github.com/wh200720041/iscloam/blob/master/img/iscloam_kitti.gif"/>
+</p>
+
+### 1.2. Ground Truth Comparison
+<p align='center'>
+<img src="https://github.com/wh200720041/iscloam/blob/master/img/kitti00.png"/>
+</p>
+`KITTI sequence 00`
+<p align='center'>
+<img src="https://github.com/wh200720041/iscloam/blob/master/img/kitti05.png"/>
+`KITTI sequence 05`
+</p>
 
 Platform: Intel® Core™ i7-8700 CPU @ 3.20GHz 
 Localization error:
@@ -13,8 +27,6 @@ Localization error:
 |----------------------------------------------|----------------------------|------------------------|
 | `KITTI sequence 00`                          | 0.24%                      | 0.51%                  |
 | `KITTI sequence 05`                          | 0.22%                      | 0.93%                  |
-
-<img src="https://github.com/wh200720041/iscloam/blob/master/img/iscloam_kitti.gif"/>
 
 ## 2. Prerequisites
 ### 2.1 **Ubuntu** and **ROS**
@@ -57,16 +69,16 @@ And then copy the file 2011_09_30_0018.bag into ~/catkin_ws/src/iscloam/dataset/
 	unzip ~/Downloads/2011_09_30_0018.zip
 ```
 
-### 4.3 Launch ROS
+### 3.3 Launch ROS
 ```
     roslaunch iscloam iscloam.launch
 ```
 
-## 5. Test other sequence
+## 4. Test other sequence
 To generate rosbag file of kitti dataset, you may use the tools provided by 
 [kitti_to_rosbag](https://github.com/ethz-asl/kitti_to_rosbag) or [kitti2bag](https://github.com/tomas789/kitti2bag) 
 
-## 6. Citation
+## 5. Citation
 If you use this work for your research, please cite
 ```
 @article{wang2020intensity,
@@ -77,5 +89,6 @@ If you use this work for your research, please cite
 }
 ```
 
-## 7.Acknowledgements
+## 6.Acknowledgements
 Thanks for [A-LOAM](https://github.com/HKUST-Aerial-Robotics/A-LOAM) and LOAM(J. Zhang and S. Singh. LOAM: Lidar Odometry and Mapping in Real-time) and [LOAM_NOTED](https://github.com/cuitaixiang/LOAM_NOTED).
+
