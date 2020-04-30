@@ -21,12 +21,11 @@ This work is 3D lidar based Simultaneous Localization And Mapping (SLAM), includ
 
 ### 1.3. Localization error
 Platform: Intel® Core™ i7-8700 CPU @ 3.20GHz 
-<p align='center'>
 | Dataset                                      | ISCLOAM                    | FLOAM                  |
 |----------------------------------------------|----------------------------|------------------------|
 | `KITTI sequence 00`                          | 0.24%                      | 0.51%                  |
 | `KITTI sequence 05`                          | 0.22%                      | 0.93%                  |
-</p>
+
 
 ## 2. Prerequisites
 ### 2.1 **Ubuntu** and **ROS**
