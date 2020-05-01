@@ -68,13 +68,16 @@ bool ISCOptimizationClass::addPoseToGraph(const pcl::PointCloud<pcl::PointXYZI>:
                 graph.push_back(gtsam::BetweenFactor<gtsam::Pose3>(gtsam::Symbol('x', matched_frame_id[i]+1), gtsam::Symbol('x', pointcloud_edge_arr.size()), loop_temp, loopModel));
                 gtsam::Values result = gtsam::LevenbergMarquardtOptimizer(graph, initials).optimize();
 
-                ROS_WARN("global optimization finished%d,%d with tranform %f,%f,%f, [%f,%f,%f,%f]",pointcloud_edge_arr.size()-1, matched_frame_id[i],loop_temp.translation().x(),loop_temp.translation().y(),loop_temp.translation().z(),loop_temp.rotation().toQuaternion().w(),loop_temp.rotation().toQuaternion().x(),loop_temp.rotation().toQuaternion().y(),loop_temp.rotation().toQuaternion().z());
-                updateStates(result);
-                stop_check_loop_count=40;
+                if(updateStates(result, matched_frame_id[i], pointcloud_edge_arr.size()-1)){
+                    stop_check_loop_count=STOP_LOOP_CHECK_COUNTER;
+                    ROS_WARN("global optimization finished%d,%d with tranform %f,%f,%f, [%f,%f,%f,%f]",pointcloud_edge_arr.size()-1, matched_frame_id[i],loop_temp.translation().x(),loop_temp.translation().y(),loop_temp.translation().z(),loop_temp.rotation().toQuaternion().w(),loop_temp.rotation().toQuaternion().x(),loop_temp.rotation().toQuaternion().y(),loop_temp.rotation().toQuaternion().z());
+                    return true;
+                }else{
+                    stop_check_loop_count=2;
+                }
 
-                return true;
 			}else{
-                stop_check_loop_count=0;
+                stop_check_loop_count=2;
             }
 		}
 	}
@@ -95,12 +98,50 @@ gtsam::Pose3 ISCOptimizationClass::eigenToPose3(const Eigen::Isometry3d& pose_ei
     return gtsam::Pose3(gtsam::Rot3::Quaternion(q.w(), q.x(), q.y(), q.z()), gtsam::Point3(pose_eigen.translation().x(), pose_eigen.translation().y(), pose_eigen.translation().z()));
 }
 
-void ISCOptimizationClass::updateStates(gtsam::Values& result){
+bool ISCOptimizationClass::updateStates(gtsam::Values& result, int matched_id, int current_id){
+    //verify states first
+    double sum_residual_q = 0.0;
+    double sum_residual_t = 0.0;
+    int total_counter=0;
+    for(int i =current_id-STOP_LOOP_CHECK_COUNTER-10;i<current_id;i++){
+        if(i<0) continue;
+        total_counter++;
+        gtsam::Pose3 pose_temp1= result.at<gtsam::Pose3>(gtsam::Symbol('x',current_id+1));
+        gtsam::Pose3 pose_temp2= result.at<gtsam::Pose3>(gtsam::Symbol('x',i+1));
+        gtsam::Pose3 tranform1 = pose_temp2.between(pose_temp1);
+        gtsam::Pose3 tranform2 = pose_optimized_arr[i].between(pose_optimized_arr[current_id]);
+        gtsam::Pose3 tranform = tranform1.between(tranform2);
+        sum_residual_t += std::abs(tranform.translation().x())+std::abs(tranform.translation().y())+std::abs(tranform.translation().z());
+        sum_residual_q += std::abs(tranform.rotation().toQuaternion().w()-1)+std::abs(tranform.rotation().toQuaternion().x())+std::abs(tranform.rotation().toQuaternion().y())+std::abs(tranform.rotation().toQuaternion().z());
+    }
+    for(int i =matched_id-STOP_LOOP_CHECK_COUNTER-10;i<matched_id;i++){
+        if(i<0) continue;
+        total_counter++;
+        gtsam::Pose3 pose_temp1= result.at<gtsam::Pose3>(gtsam::Symbol('x',matched_id+1));
+        gtsam::Pose3 pose_temp2= result.at<gtsam::Pose3>(gtsam::Symbol('x',i+1));
+        gtsam::Pose3 tranform1 = pose_temp2.between(pose_temp1);
+        gtsam::Pose3 tranform2 = pose_optimized_arr[i].between(pose_optimized_arr[matched_id]);
+        gtsam::Pose3 tranform = tranform1.between(tranform2);
+        sum_residual_t += std::abs(tranform.translation().x())+std::abs(tranform.translation().y())+std::abs(tranform.translation().z());
+        sum_residual_q += std::abs(tranform.rotation().toQuaternion().w()-1)+std::abs(tranform.rotation().toQuaternion().x())+std::abs(tranform.rotation().toQuaternion().y())+std::abs(tranform.rotation().toQuaternion().z());
+    }
+    sum_residual_q = sum_residual_q / total_counter;
+    sum_residual_t = sum_residual_t / total_counter;
+    //ROS_INFO("optimization discard due to frame unaligned, residual_q:%f, residual_t:%f",sum_residual_q,sum_residual_t);
+    
+    if(sum_residual_q>0.02 || sum_residual_t>0.5){
+        ROS_INFO("optimization discard due to frame unaligned, residual_q:%f, residual_t:%f",sum_residual_q,sum_residual_t);
+        //graph.pop_back();
+        graph.remove(graph.size()-1);
+        return false;
+    }
+    //update states
     initials.clear();
     for(int i =0;i<(int)result.size();i++){
         pose_optimized_arr[i]= result.at<gtsam::Pose3>(gtsam::Symbol('x',i+1));
         initials.insert(gtsam::Symbol('x', i+1), pose_optimized_arr[i]);
     }
+    return true;
 
 
 }
@@ -158,11 +199,11 @@ bool ISCOptimizationClass::geometryConsistencyVerification(int current_id, int m
     *loop_map_pc += *map_edge;
 
     double match_score = estimateOdom(map_edge,map_surf,current_scan_edge,current_scan_surf,transform);
-    ROS_WARN("matched score %f",match_score);
+    //ROS_WARN("matched score %f",match_score);
     if(match_score < LOOPCLOSURE_THRESHOLD)
         return true;
     else{
-        ROS_WARN("loop rejected due to geometry verification current_id%d matched_id %d",current_id,matched_id);
+        //ROS_INFO("loop rejected due to geometry verification current_id%d matched_id %d, score: %f",current_id,matched_id,match_score);
         return false;
     }
 

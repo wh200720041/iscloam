@@ -45,6 +45,8 @@
 #include "lidarOptimization.h"
 
 #define LOOPCLOSURE_THRESHOLD 31
+//stop loop check for the next N frames if loop is identified
+#define STOP_LOOP_CHECK_COUNTER 20
 class ISCOptimizationClass
 {
     public:
@@ -92,7 +94,7 @@ class ISCOptimizationClass
 
         bool geometryConsistencyVerification(int current_id, int matched_id, Eigen::Isometry3d& transform);
 
-        void updateStates(gtsam::Values& result);
+        bool updateStates(gtsam::Values& result, int matched_id, int current_id);
      
         double estimateOdom(const pcl::PointCloud<pcl::PointXYZI>::Ptr& pc_source_edge, const pcl::PointCloud<pcl::PointXYZI>::Ptr& pc_source_surf, const pcl::PointCloud<pcl::PointXYZI>::Ptr& pc_target_edge, const pcl::PointCloud<pcl::PointXYZI>::Ptr& pc_target_surf, Eigen::Isometry3d& transform);
 
