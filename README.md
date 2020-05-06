@@ -14,14 +14,19 @@ This work is 3D lidar based Simultaneous Localization And Mapping (SLAM), includ
 ### 1.2. Ground Truth Comparison
 Green: ISCLOAM        Red: Ground Truth
 <p align='center'>
-<img src="https://github.com/wh200720041/iscloam/blob/master/img/KITTI00.png" width = 45% />
-<img src="https://github.com/wh200720041/iscloam/blob/master/img/KITTI05.png" width = 45% />
+<img src="https://github.com/wh200720041/iscloam/blob/master/img/00.png" width = 45% />
+<img src="https://github.com/wh200720041/iscloam/blob/master/img/05.png" width = 45% />
 </p>
 
                       KITTI sequence 00                                  KITTI sequence 05
 
-### 1.3. Localization error
+### 1.3. Localization error  
+
 Platform: Intel® Core™ i7-8700 CPU @ 3.20GHz 
+Average translation error : 1.08%
+Average rotation error : 0.000073
+
+### 1.3. Comparison
 | Dataset                                      | ISCLOAM                    | FLOAM                  |
 |----------------------------------------------|----------------------------|------------------------|
 | `KITTI sequence 00`                          | 0.24%                      | 0.51%                  |
