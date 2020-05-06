@@ -23,7 +23,9 @@ Green: ISCLOAM        Red: Ground Truth
 ### 1.3. Localization error  
 
 Platform: Intel® Core™ i7-8700 CPU @ 3.20GHz 
+
 Average translation error : 1.08%
+
 Average rotation error : 0.000073
 
 ### 1.3. Comparison
@@ -95,4 +97,5 @@ If you use this work for your research, please cite
 
 ## 6.Acknowledgements
 Thanks for [A-LOAM](https://github.com/HKUST-Aerial-Robotics/A-LOAM) and LOAM(J. Zhang and S. Singh. LOAM: Lidar Odometry and Mapping in Real-time) and [LOAM_NOTED](https://github.com/cuitaixiang/LOAM_NOTED).
+
 
