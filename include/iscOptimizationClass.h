@@ -46,7 +46,7 @@
 
 #define LOOPCLOSURE_THRESHOLD 31
 //stop loop check for the next N frames if loop is identified
-#define STOP_LOOP_CHECK_COUNTER 20
+#define STOP_LOOP_CHECK_COUNTER 40
 class ISCOptimizationClass
 {
     public:
@@ -68,6 +68,8 @@ class ISCOptimizationClass
 
         pcl::PointCloud<pcl::PointXYZI>::Ptr loop_candidate_pc = pcl::PointCloud<pcl::PointXYZI>::Ptr(new pcl::PointCloud<pcl::PointXYZI>()); 
         pcl::PointCloud<pcl::PointXYZI>::Ptr loop_map_pc = pcl::PointCloud<pcl::PointXYZI>::Ptr(new pcl::PointCloud<pcl::PointXYZI>()); 
+        pcl::PointCloud<pcl::PointXYZI>::Ptr map = pcl::PointCloud<pcl::PointXYZI>::Ptr(new pcl::PointCloud<pcl::PointXYZI>()); 
+        
     private:
         std::vector<gtsam::Pose3> pose_optimized_arr;
         std::vector<gtsam::Pose3> odom_original_arr;

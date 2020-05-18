@@ -29,6 +29,7 @@
 #include <iscloam/LoopInfo.h>
 
 ros::Publisher odom_pub;
+//ros::Publisher map_pub;
 ros::Publisher path_pub;
 ros::Publisher loop_map_pub;
 ros::Publisher loop_candidate_pub;
@@ -170,7 +171,7 @@ void global_optimization(){
             if(iscOptimization.addPoseToGraph(pointcloud_edge_in, pointcloud_surf_in,matched_frame_id, odom_in)){
                 //update path
                 path_optimized.poses.clear();
-                for(int i=0;i<(int)iscOptimization.pointcloud_surf_arr.size();i++){
+                for(int i=0;i<(int)iscOptimization.pointcloud_surf_arr.size()-1;i++){
                     Eigen::Isometry3d pose = iscOptimization.getPose(i);
                     Eigen::Quaterniond q_temp(pose.rotation());
                     
@@ -189,7 +190,7 @@ void global_optimization(){
             }
 
             path_optimized.header.seq = (int)iscOptimization.pointcloud_surf_arr.size();
-            path_optimized.header.stamp = ros::Time::now();
+            path_optimized.header.stamp = pointcloud_time;
             Eigen::Isometry3d pose_current = iscOptimization.getLastPose();
             Eigen::Quaterniond q_current(pose_current.rotation());
             Eigen::Vector3d t_current = pose_current.translation();
@@ -208,6 +209,7 @@ void global_optimization(){
             path_optimized.poses.push_back(pose_temp);
             path_pub.publish(path_optimized);
 
+            /* loop closure visualization
             sensor_msgs::PointCloud2 PointsMsg;
             pcl::toROSMsg(*iscOptimization.loop_map_pc, PointsMsg);
             PointsMsg.header.stamp = pointcloud_time;
@@ -219,6 +221,15 @@ void global_optimization(){
             PointsMsg2.header.stamp = pointcloud_time;
             PointsMsg2.header.frame_id = "/map";
             loop_candidate_pub.publish(PointsMsg2);
+            
+
+            sensor_msgs::PointCloud2 PointsMsg3;
+            pcl::toROSMsg(*iscOptimization.map, PointsMsg3);
+            PointsMsg2.header.stamp = pointcloud_time;
+            PointsMsg2.header.frame_id = "/map";
+            map_pub.publish(PointsMsg3);
+            */
+
         }
         //sleep 2 ms every time
         std::chrono::milliseconds dura(2);
@@ -238,6 +249,7 @@ int main(int argc, char **argv)
     ros::Subscriber loop_sub= nh.subscribe<iscloam::LoopInfo>("/loop_closure", 10, loopClosureCallback);
 
     odom_pub = nh.advertise<nav_msgs::Odometry>("/odom_final", 100);
+    //map_pub = nh.advertise<sensor_msgs::PointCloud2>("/map", 100);
     path_pub = nh.advertise<nav_msgs::Path>("/final_path", 100);
     loop_map_pub = nh.advertise<sensor_msgs::PointCloud2>("/loop_map", 100);
     loop_candidate_pub = nh.advertise<sensor_msgs::PointCloud2>("/loop_candidate", 100);

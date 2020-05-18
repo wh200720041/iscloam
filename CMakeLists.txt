@@ -79,8 +79,11 @@ target_link_libraries(iscloam_laser_processing_node ${EIGEN3_LIBRARIES} ${catkin
 add_executable(iscloam_odom_estimation_node src/odomEstimationNode.cpp src/lidarOptimization.cpp src/lidar.cpp src/odomEstimationClass.cpp)
 target_link_libraries(iscloam_odom_estimation_node ${EIGEN3_LIBRARIES} ${catkin_LIBRARIES} ${PCL_LIBRARIES} ${CERES_LIBRARIES} ${OpenCV_LIBRARIES} gtsam)
 
-add_executable(iscloam_isc_generation_node src/iscGenerationNode.cpp src/iscGenerationClass.cpp)
+add_executable(iscloam_isc_generation_node src/iscGenerationNode.cpp src/iscGenerationClass.cpp src/lidar.cpp)
 target_link_libraries(iscloam_isc_generation_node ${EIGEN3_LIBRARIES} ${catkin_LIBRARIES} ${PCL_LIBRARIES} ${CERES_LIBRARIES} ${OpenCV_LIBRARIES} gtsam)
 
-add_executable(iscloam_isc_optimization_node src/iscOptimizationNode.cpp src/iscOptimizationClass.cpp src/lidarOptimization.cpp)
+add_executable(iscloam_isc_optimization_node src/iscOptimizationNode.cpp src/iscOptimizationClass.cpp src/lidarOptimization.cpp src/lidar.cpp)
 target_link_libraries(iscloam_isc_optimization_node ${EIGEN3_LIBRARIES} ${catkin_LIBRARIES} ${PCL_LIBRARIES} ${CERES_LIBRARIES} ${OpenCV_LIBRARIES} gtsam)
+
+add_executable(iscloam_laser_mapping_node src/laserMappingNode.cpp src/laserMappingClass.cpp src/lidar.cpp)
+target_link_libraries(iscloam_laser_mapping_node ${EIGEN3_LIBRARIES} ${catkin_LIBRARIES} ${PCL_LIBRARIES})

@@ -7,8 +7,14 @@ This work is 3D lidar based Simultaneous Localization And Mapping (SLAM), includ
 
 ## 1. Evaluation
 ### 1.1. Example
+Localization
 <p align='center'>
 <img src="https://github.com/wh200720041/iscloam/blob/master/img/iscloam_kitti.gif"/>
+</p>
+
+Mapping 
+<p align='center'>
+<img src="https://github.com/wh200720041/iscloam/blob/master/img/iscloam_mapping.gif"/>
 </p>
 
 ### 1.2. Ground Truth Comparison
@@ -58,9 +64,11 @@ Follow [OPENCV Installation](https://opencv.org/releases/).
 cd ~/catkin_ws/src
 git clone https://github.com/wh200720041/iscloam.git
 cd ..
-catkin_make
+catkin_make -j1
 source ~/catkin_ws/devel/setup.bash
 ```
+
+
 ### 3.2 Download test rosbag
 Download [KITTI sequence 05](https://drive.google.com/open?id=18ilF7GZDg2tmT6sD5pd1RjqO0XJLn9Mv) or [KITTI sequence 07](https://drive.google.com/open?id=1VpoKm7f4es4ISQ-psp4CV3iylcA4eu0-)
 
@@ -79,6 +87,13 @@ unzip ~/Downloads/2011_09_30_0018.zip
 ```
 roslaunch iscloam iscloam.launch
 ```
+
+### 3.4 Mapping Node
+if you would like to generate the map of environment at the same time, you can run 
+```
+roslaunch iscloam iscloam_mapping.launch
+```
+Note that the global map can be very large, so it may takes a while to perform global optimization, some lag is expected between trajectory and map since they are running in separate thread. More CPU usage will happen when loop closure is identified.
 
 ## 4. Test other sequence
 To generate rosbag file of kitti dataset, you may use the tools provided by 

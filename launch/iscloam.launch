@@ -17,9 +17,10 @@
     <node pkg="iscloam" type="iscloam_isc_optimization_node" name="iscloam_isc_optimization_node" output="screen"/>
 
     <node pkg="tf" type="static_transform_publisher" name="word2map_tf"  args="0 0 0 0 0 0 /world /map 10" />
+
     <arg name="rviz" default="true" />
     <group if="$(arg rviz)">
-        <node launch-prefix="nice" pkg="rviz" type="rviz" name="rviz" args="-d $(find kitti_evaluation_kit)/rviz/iscloam_kitti.rviz" />
+        <node launch-prefix="nice" pkg="rviz" type="rviz" name="rviz" args="-d $(find iscloam)/rviz/iscloam.rviz" />
     </group>
 
     
