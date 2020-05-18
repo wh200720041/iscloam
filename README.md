@@ -7,21 +7,21 @@ This work is 3D lidar based Simultaneous Localization And Mapping (SLAM), includ
 
 ## 1. Evaluation
 ### 1.1. Mapping Example
-<p align='center'>
-<img src="https://github.com/wh200720041/iscloam/blob/master/img/iscloam_mapping.gif"/>
-</p>
+<a href="https://youtu.be/0-plzzxibHA" target="_blank">
+<img width="80%" src="/media/figs/packnet-ddad.gif"/>
+</a>
 
 ### 1.2. Localization Example
 <p align='center'>
-<img src="https://github.com/wh200720041/iscloam/blob/master/img/iscloam_kitti.gif"/>
+<img src="/img/iscloam_kitti.gif"/>
 </p>
 
 
 ### 1.3. Ground Truth Comparison
 Green: ISCLOAM        Red: Ground Truth
 <p align='center'>
-<img src="https://github.com/wh200720041/iscloam/blob/master/img/00.png" width = 45% />
-<img src="https://github.com/wh200720041/iscloam/blob/master/img/05.png" width = 45% />
+<img src="/img/00.png" width = 45% />
+<img src="/img/05.png" width = 45% />
 </p>
 
                       KITTI sequence 00                                  KITTI sequence 05
