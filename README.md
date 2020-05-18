@@ -7,9 +7,11 @@ This work is 3D lidar based Simultaneous Localization And Mapping (SLAM), includ
 
 ## 1. Evaluation
 ### 1.1. Mapping Example
+<p align='center'>
 <a href="https://youtu.be/0-plzzxibHA" target="_blank">
 <img width="80%" src="/img/iscloam_mapping.gif"/>
 </a>
+</p>
 
 ### 1.2. Localization Example
 <p align='center'>
