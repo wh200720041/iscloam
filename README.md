@@ -9,7 +9,7 @@ This work is 3D lidar based Simultaneous Localization And Mapping (SLAM), includ
 ### 1.1. Mapping Example
 <p align='center'>
 <a href="https://youtu.be/0-plzzxibHA" target="_blank">
-<img width="80%" src="/img/iscloam_mapping.gif"/>
+<img width="70%" src="/img/iscloam_kitti_mapping.gif"/>
 </a>
 </p>
 
