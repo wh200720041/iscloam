@@ -1,3 +1,7 @@
+// Author of FLOAM: Wang Han 
+// Email wh200720041@gmail.com
+// Homepage https://wanghan.pro
+
 #include "laserMappingClass.h"
 
 void LaserMappingClass::init(void){
@@ -156,11 +160,13 @@ void LaserMappingClass::resetMap(std::vector<Eigen::Isometry3d>& path){
 		pcl::PointCloud<pcl::PointXYZI>::Ptr transformed_pc(new pcl::PointCloud<pcl::PointXYZI>());
 		pcl::transformPointCloud(*point_cloud_arr[i], *transformed_pc, path[i].cast<float>());
 		
-		//储存点
+		
 		for (int j = 0; j < (int)transformed_pc->points.size(); j++)
 		{
 			pcl::PointXYZI point_temp = transformed_pc->points[j];
-			point_temp.intensity = std::min(1.0 , std::max(point_cloud_arr[i]->points[j].z+2.0, 0.0) / 4);
+			//for visualization only
+			//point_temp.intensity = std::min(1.0 , std::max(point_cloud_arr[i]->points[j].z+2.0, 0.0) / 4);
+
 			int currentPointIdX = int(std::floor(point_temp.x / LASER_CELL_WIDTH + 0.5)) + origin_in_map_x;
 			int currentPointIdY = int(std::floor(point_temp.y / LASER_CELL_HEIGHT + 0.5)) + origin_in_map_y;
 			int currentPointIdZ = int(std::floor(point_temp.z / LASER_CELL_DEPTH + 0.5)) + origin_in_map_z;
@@ -204,7 +210,8 @@ void LaserMappingClass::updateCurrentPointsToMap(const pcl::PointCloud<pcl::Poin
 	{
 		pcl::PointXYZI point_temp = transformed_pc->points[i];
 		//for visualization only
-		point_temp.intensity = std::min(1.0 , std::max(pc_in->points[i].z+2.0, 0.0) / 4);
+		//point_temp.intensity = std::min(1.0 , std::max(pc_in->points[i].z+2.0, 0.0) / 4);
+		
 		int currentPointIdX = int(std::floor(point_temp.x / LASER_CELL_WIDTH + 0.5)) + origin_in_map_x;
 		int currentPointIdY = int(std::floor(point_temp.y / LASER_CELL_HEIGHT + 0.5)) + origin_in_map_y;
 		int currentPointIdZ = int(std::floor(point_temp.z / LASER_CELL_DEPTH + 0.5)) + origin_in_map_z;
@@ -246,3 +253,4 @@ pcl::PointCloud<pcl::PointXYZI>::Ptr LaserMappingClass::getMap(void){
 LaserMappingClass::LaserMappingClass(){
 
 }
+
