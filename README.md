@@ -5,6 +5,7 @@ This work is 3D lidar based Simultaneous Localization And Mapping (SLAM), includ
 
 **Author:** [Wang Han](http://wanghan.pro), Nanyang Technological University, Singapore
 
+For front-end only odometry, you may visit [FLOAM (fast lidar odometry and mapping)](https://github.com/wh200720041/floam)
 ## 1. Evaluation
 ### 1.1. Mapping Example
 <p align='center'>
