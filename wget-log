@@ -1,8 +1,0 @@
---2020-05-19 10:26:33--  http://robotics.ethz.ch/~asl-datasets/2020_voxgraph_arche/arche_flight1_2ms_indoor-outdoor-figure-8.zip
-Resolving robotics.ethz.ch (robotics.ethz.ch)... 129.132.38.186
-Connecting to robotics.ethz.ch (robotics.ethz.ch)|129.132.38.186|:80... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 11051359362 (10G) [application/zip]
-Saving to: ‘/home/icehan/Downloads/arche_flight1_2ms_indoor-outdoor-figure-8.zip’
-
-            arche_f  22%[===>                ]   2.33G  1.44MB/s    eta 93m 1s            arche_fl  22%[===>                ]   2.33G  1.45MB/s    eta 93m 1s           arche_fli  22%[===>                ]   2.33G  1.43MB/s    eta 93m 0s 
