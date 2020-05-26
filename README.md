@@ -61,6 +61,13 @@ Follow [GTSAM Installation](https://gtsam.org/get_started/).
 ### 2.3. **OPENCV**
 Follow [OPENCV Installation](https://opencv.org/releases/).
 
+### 2.4. **Trajectory visualization**
+For visualization purpose, this package uses hector trajectory sever, you may install the package by 
+```
+sudo apt-get install ros-melodic-hector-trajectory-server
+```
+Alternatively, you may remove the hector trajectory server node if trajectory visualization is not needed
+
 ## 3. Build 
 ### 3.1 Clone repository:
 ```
