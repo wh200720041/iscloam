@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
 
-    <node pkg="rosbag" type="play" name="rosbag_play" args="--clock $(find iscloam)/dataset/2011_09_30_0018.bag"/> 
+    <node pkg="rosbag" type="play" name="rosbag_play" args="--clock $(find iscloam)/dataset/kitti/2011_09_30_0018.bag"/> 
 
     <!--- Sim Time -->
     <param name="/use_sim_time" value="true" />
@@ -10,6 +10,8 @@
     <param name="ring_height" type="int" value="20" />
     <param name="ring_width" type="int" value="60" />
     <param name="vertical_angle" type="double" value="2.0" />
+    <param name="max_dis" type="double" value="90.0" />
+    <param name="min_dis" type="double" value="3.0" />
     <!--- -->
     <node pkg="iscloam" type="iscloam_odom_estimation_node" name="iscloam_odom_estimation_node" output="screen"/>
     <node pkg="iscloam" type="iscloam_laser_processing_node" name="iscloam_laser_processing_node" output="screen"/>
@@ -39,3 +41,4 @@
     </node>
 
 </launch>
+

@@ -243,16 +243,16 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "iscOptimization");
     ros::NodeHandle nh("~");
 
-    ros::Subscriber velodyne_edge_sub= nh.subscribe<sensor_msgs::PointCloud2>("/laser_cloud_less_sharp", 10, pointCloudEdgeCallback);
-    ros::Subscriber velodyne_surf_sub= nh.subscribe<sensor_msgs::PointCloud2>("/laser_cloud_less_flat", 10, pointCloudSurfCallback);
+    ros::Subscriber velodyne_edge_sub= nh.subscribe<sensor_msgs::PointCloud2>("/laser_cloud_edge", 10, pointCloudEdgeCallback);
+    ros::Subscriber velodyne_surf_sub= nh.subscribe<sensor_msgs::PointCloud2>("/laser_cloud_surf", 10, pointCloudSurfCallback);
     ros::Subscriber odom_sub= nh.subscribe<nav_msgs::Odometry>("/odom", 10, odomCallback);
     ros::Subscriber loop_sub= nh.subscribe<iscloam::LoopInfo>("/loop_closure", 10, loopClosureCallback);
 
     odom_pub = nh.advertise<nav_msgs::Odometry>("/odom_final", 100);
     //map_pub = nh.advertise<sensor_msgs::PointCloud2>("/map", 100);
     path_pub = nh.advertise<nav_msgs::Path>("/final_path", 100);
-    loop_map_pub = nh.advertise<sensor_msgs::PointCloud2>("/loop_map", 100);
-    loop_candidate_pub = nh.advertise<sensor_msgs::PointCloud2>("/loop_candidate", 100);
+    // loop_map_pub = nh.advertise<sensor_msgs::PointCloud2>("/loop_map", 100);
+    // loop_candidate_pub = nh.advertise<sensor_msgs::PointCloud2>("/loop_candidate", 100);
 
     path_optimized.header.frame_id = "map";   
     path_optimized.header.stamp = ros::Time::now();

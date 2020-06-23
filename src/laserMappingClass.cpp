@@ -253,4 +253,3 @@ pcl::PointCloud<pcl::PointXYZI>::Ptr LaserMappingClass::getMap(void){
 LaserMappingClass::LaserMappingClass(){
 
 }
-

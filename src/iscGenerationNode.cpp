@@ -133,13 +133,13 @@ int main(int argc, char **argv)
 
 
     //read parameter
-    int sector_width =60;
+    int sector_width = 60;
     int ring_height = 60;
     double max_dis= 40.0;
 
     nh.getParam("/sector_width", sector_width); 
     nh.getParam("/ring_height", ring_height); 
-    nh.getParam("/max_dis", max_dis); 
+    //nh.getParam("/max_dis", max_dis); 
     nh.getParam("/scan_period", scan_period);  
 
     //init ISC
