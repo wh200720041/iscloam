@@ -31,7 +31,6 @@ public:
 };
 
 
-//这里所有的数据传递全部采用指针或引用的形式来提高传递效率
 class LaserProcessingClass 
 {
     public:
