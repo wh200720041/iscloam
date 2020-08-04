@@ -4,14 +4,14 @@
 
 #include "odomEstimationClass.h"
 
-void OdomEstimationClass::init(lidar::Lidar lidar_param){
+void OdomEstimationClass::init(lidar::Lidar lidar_param, double map_resolution){
     //init local map
     laserCloudCornerMap = pcl::PointCloud<pcl::PointXYZI>::Ptr(new pcl::PointCloud<pcl::PointXYZI>());
     laserCloudSurfMap = pcl::PointCloud<pcl::PointXYZI>::Ptr(new pcl::PointCloud<pcl::PointXYZI>());
 
     //downsampling size
-    downSizeFilterEdge.setLeafSize(0.4, 0.4, 0.4);
-    downSizeFilterSurf.setLeafSize(0.8, 0.8, 0.8);
+    downSizeFilterEdge.setLeafSize(map_resolution, map_resolution, map_resolution);
+    downSizeFilterSurf.setLeafSize(map_resolution * 2, map_resolution * 2, map_resolution * 2);
 
     //kd-tree
     kdtreeEdgeMap = pcl::KdTreeFLANN<pcl::PointXYZI>::Ptr(new pcl::KdTreeFLANN<pcl::PointXYZI>());

@@ -4,7 +4,7 @@
 
 #include "laserMappingClass.h"
 
-void LaserMappingClass::init(void){
+void LaserMappingClass::init(double map_resolution_){
 	//init map
 	//init can have real object, but future added block does not need
 	for(int i=0;i<LASER_CELL_RANGE_HORIZONTAL*2+1;i++){
@@ -19,7 +19,7 @@ void LaserMappingClass::init(void){
 		}
 		map.push_back(map_height_temp);
 	}
-
+	map_resolution = map_resolution_;
 	origin_in_map_x = LASER_CELL_RANGE_HORIZONTAL;
 	origin_in_map_y = LASER_CELL_RANGE_HORIZONTAL;
 	origin_in_map_z = LASER_CELL_RANGE_VERTICAL;
@@ -28,7 +28,7 @@ void LaserMappingClass::init(void){
 	map_depth = LASER_CELL_RANGE_HORIZONTAL*2+1;
 
 	//downsampling size
-	downSizeFilter.setLeafSize(1.0, 1.0, 1.0);
+	downSizeFilter.setLeafSize(map_resolution* 2.5, map_resolution* 2.5, map_resolution* 2.5);
 	last_pose = Eigen::Isometry3d::Identity();
 }
 
@@ -147,7 +147,7 @@ void LaserMappingClass::checkPoints(int& x, int& y, int& z){
 
 void LaserMappingClass::resetMap(std::vector<Eigen::Isometry3d>& path){
 	map.clear();
-	init();
+	init(map_resolution);
 
 	for(int i=0;i<path.size();i++){
 		int currentPosIdX = int(std::floor(path[i].translation().x() / LASER_CELL_WIDTH + 0.5)) + origin_in_map_x;

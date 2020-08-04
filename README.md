@@ -109,7 +109,11 @@ Note that the global map can be very large, so it may takes a while to perform g
 To generate rosbag file of kitti dataset, you may use the tools provided by 
 [kitti_to_rosbag](https://github.com/ethz-asl/kitti_to_rosbag) or [kitti2bag](https://github.com/tomas789/kitti2bag) 
 
-## 5. Citation
+## 5. Other Velodyne sensor
+You may use iscloam_velodyne.launch for your own velodyne sensor, such as Velodyne VLP-16. 
+
+
+## 6. Citation
 If you use this work for your research, please cite
 ```
 @article{wang2020intensity,
@@ -120,8 +124,7 @@ If you use this work for your research, please cite
 }
 ```
 
-## 6.Acknowledgements
+## 7.Acknowledgements
 Thanks for [A-LOAM](https://github.com/HKUST-Aerial-Robotics/A-LOAM) and LOAM(J. Zhang and S. Singh. LOAM: Lidar Odometry and Mapping in Real-time) and [LOAM_NOTED](https://github.com/cuitaixiang/LOAM_NOTED).
-
 
 

@@ -38,7 +38,7 @@ class LaserMappingClass
 
     public:
     	LaserMappingClass();
-		void init(void);
+		void init(double map_resolution_);
 		void resetMap(std::vector<Eigen::Isometry3d>& path);
 		void updateCurrentPointsToMap(const pcl::PointCloud<pcl::PointXYZI>::Ptr& pc_in, const Eigen::Isometry3d& pose_current);
 		pcl::PointCloud<pcl::PointXYZI>::Ptr getMap(void);
@@ -54,7 +54,7 @@ class LaserMappingClass
 		int map_depth;
 		std::vector<std::vector<std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr>>> map;
 		pcl::VoxelGrid<pcl::PointXYZI> downSizeFilter;
-		
+		double map_resolution = 1.0;
 		void addWidthCellNegative(void);
 		void addWidthCellPositive(void);
 		void addHeightCellNegative(void);
