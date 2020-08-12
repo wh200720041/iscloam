@@ -87,9 +87,9 @@ Unzip compressed file 2011_09_30_0018.zip. If your system does not have unzip. p
 sudo apt-get install unzip 
 ```
 
-And then copy the file 2011_09_30_0018.bag into ~/catkin_ws/src/iscloam/dataset/ (this may take a few minutes to unzip the file)
+This may take a few minutes to unzip the file, by default the file location should be /home/user/Downloads/2011_09_30_0018.bag
 ```
-cd ~/catkin_ws/src/iscloam/dataset/
+cd ~/Downloads
 unzip ~/Downloads/2011_09_30_0018.zip
 ```
 
@@ -126,5 +126,6 @@ If you use this work for your research, please cite
 
 ## 7.Acknowledgements
 Thanks for [A-LOAM](https://github.com/HKUST-Aerial-Robotics/A-LOAM) and LOAM(J. Zhang and S. Singh. LOAM: Lidar Odometry and Mapping in Real-time) and [LOAM_NOTED](https://github.com/cuitaixiang/LOAM_NOTED).
+
 
 
