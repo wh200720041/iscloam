@@ -7,20 +7,23 @@ This work is 3D lidar based Simultaneous Localization And Mapping (SLAM), includ
 
 For front-end only odometry, you may visit [FLOAM (fast lidar odometry and mapping)](https://github.com/wh200720041/floam)
 ## 1. Evaluation
-### 1.1. Mapping Example
+### 1.1. Demo
+Watch our demo at [Video Link](https://youtu.be/Kfi6CFK4Ke4)
+
+### 1.2. Mapping Example
 <p align='center'>
 <a href="https://youtu.be/0-plzzxibHA" target="_blank">
 <img width="65%" src="/img/iscloam_kitti_mapping.gif"/>
 </a>
 </p>
 
-### 1.2. Localization Example
+### 1.3. Localization Example
 <p align='center'>
 <img width="65%" src="/img/iscloam_kitti.gif"/>
 </p>
 
 
-### 1.3. Ground Truth Comparison
+### 1.4. Ground Truth Comparison
 Green: ISCLOAM        Red: Ground Truth
 <p align='center'>
 <img src="/img/00.png" width = 45% />
@@ -29,7 +32,7 @@ Green: ISCLOAM        Red: Ground Truth
 
                       KITTI sequence 00                                  KITTI sequence 05
 
-### 1.4. Localization error  
+### 1.5. Localization error  
 
 Platform: Intel® Core™ i7-8700 CPU @ 3.20GHz 
 
@@ -37,7 +40,7 @@ Average translation error : 1.08%
 
 Average rotation error : 0.000073
 
-### 1.5. Comparison
+### 1.6. Comparison
 | Dataset                                      | ISCLOAM                    | FLOAM                  |
 |----------------------------------------------|----------------------------|------------------------|
 | `KITTI sequence 00`                          | 0.24%                      | 0.51%                  |
