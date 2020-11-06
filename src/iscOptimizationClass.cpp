@@ -24,15 +24,26 @@ void ISCOptimizationClass::init(void){
     //attention, here is x y z r p y order
     stop_check_loop_count=0;
     
-    downSizeFilter.setLeafSize(0.4, 0.4, 0.4);
+    downSizeFilter.setLeafSize(0.8, 0.8, 0.8);
 }
 
 bool ISCOptimizationClass::addPoseToGraph(const pcl::PointCloud<pcl::PointXYZI>::Ptr& pointcloud_edge_in, const pcl::PointCloud<pcl::PointXYZI>::Ptr& pointcloud_surf_in, std::vector<int>& matched_frame_id, Eigen::Isometry3d& odom_in){
 
     //pointcloud_arr.push_back(pointcloud_in);
-    pointcloud_surf_arr.push_back(pointcloud_surf_in);
-    pointcloud_edge_arr.push_back(pointcloud_edge_in);
-    // ROS_INFO("input pc size %d",(int)pointcloud_edge_in->points.size());
+    pcl::VoxelGrid<pcl::PointXYZI> downSizeEdgeFilter;
+    pcl::VoxelGrid<pcl::PointXYZI> downSizeSurfFilter;
+    downSizeSurfFilter.setLeafSize(0.8, 0.8, 0.8);
+    downSizeEdgeFilter.setLeafSize(0.4, 0.4, 0.4);
+    downSizeEdgeFilter.setInputCloud(pointcloud_edge_in);
+    downSizeSurfFilter.setInputCloud(pointcloud_surf_in);
+    pcl::PointCloud<pcl::PointXYZI>::Ptr filtered_edge_in(new pcl::PointCloud<pcl::PointXYZI>()); 
+    pcl::PointCloud<pcl::PointXYZI>::Ptr filtered_surf_in(new pcl::PointCloud<pcl::PointXYZI>()); 
+    downSizeEdgeFilter.filter(*filtered_edge_in);
+    downSizeSurfFilter.filter(*filtered_surf_in);
+    pointcloud_edge_arr.push_back(filtered_edge_in);
+    pointcloud_surf_arr.push_back(filtered_surf_in);
+    
+    //ROS_INFO("input pc size %d %d",(int)filtered_edge_in->points.size(),(int)filtered_surf_in->points.size());
     gtsam::Pose3 pose3_current = eigenToPose3(odom_in);
 
     if(pointcloud_edge_arr.size()<=1){
@@ -50,37 +61,36 @@ bool ISCOptimizationClass::addPoseToGraph(const pcl::PointCloud<pcl::PointXYZI>:
     initials.insert(gtsam::Symbol('x', pointcloud_edge_arr.size()), pose_optimized_arr.back());
     graph.push_back(gtsam::BetweenFactor<gtsam::Pose3>(gtsam::Symbol('x', pointcloud_edge_arr.size()-1), gtsam::Symbol('x', pointcloud_edge_arr.size()), odom_original_arr.back(), odomModel));
 
-
     if(stop_check_loop_count>0){
         stop_check_loop_count--;
         return false;
     }
-	if(matched_frame_id.size()!=0){
-		//if loop closure detected
-		for(int i=0;i<(int)matched_frame_id.size();i++){
+    if(matched_frame_id.size()!=0){
+        //if loop closure detected
+        for(int i=0;i<(int)matched_frame_id.size();i++){
             //get initial guess
             gtsam::Pose3 transform_pose3 =  pose_optimized_arr[matched_frame_id[i]].between(pose_optimized_arr.back());
-			//ROS_WARN("pose %f,%f,%f, [%f,%f,%f,%f]",transform_pose3.translation().x(),transform_pose3.translation().y(),transform_pose3.translation().z(),transform_pose3.rotation().toQuaternion().w(),transform_pose3.rotation().toQuaternion().x(),transform_pose3.rotation().toQuaternion().y(),transform_pose3.rotation().toQuaternion().z());
+            //ROS_WARN("pose %f,%f,%f, [%f,%f,%f,%f]",transform_pose3.translation().x(),transform_pose3.translation().y(),transform_pose3.translation().z(),transform_pose3.rotation().toQuaternion().w(),transform_pose3.rotation().toQuaternion().x(),transform_pose3.rotation().toQuaternion().y(),transform_pose3.rotation().toQuaternion().z());
             Eigen::Isometry3d transform = pose3ToEigen(pose_optimized_arr[matched_frame_id[i]].between(pose_optimized_arr.back()));
-			if(geometryConsistencyVerification(pointcloud_edge_arr.size()-1, matched_frame_id[i], transform)){
-
+            //ROS_WARN("flag 1 %d,%d",matched_frame_id[i],pointcloud_edge_arr.size());
+            if(geometryConsistencyVerification(pointcloud_edge_arr.size()-1, matched_frame_id[i], transform)){
                 gtsam::Pose3 loop_temp = eigenToPose3(transform);
                 graph.push_back(gtsam::BetweenFactor<gtsam::Pose3>(gtsam::Symbol('x', matched_frame_id[i]+1), gtsam::Symbol('x', pointcloud_edge_arr.size()), loop_temp, loopModel));
                 gtsam::Values result = gtsam::LevenbergMarquardtOptimizer(graph, initials).optimize();
-
                 if(updateStates(result, matched_frame_id[i], pointcloud_edge_arr.size()-1)){
                     stop_check_loop_count=STOP_LOOP_CHECK_COUNTER;
                     ROS_WARN("global optimization finished%d,%d with tranform %f,%f,%f, [%f,%f,%f,%f]",pointcloud_edge_arr.size()-1, matched_frame_id[i],loop_temp.translation().x(),loop_temp.translation().y(),loop_temp.translation().z(),loop_temp.rotation().toQuaternion().w(),loop_temp.rotation().toQuaternion().x(),loop_temp.rotation().toQuaternion().y(),loop_temp.rotation().toQuaternion().z());
+                    
                     return true;
                 }else{
                     stop_check_loop_count=2;
                 }
 
-			}else{
+            }else{
                 stop_check_loop_count=2;
             }
-		}
-	}
+        }
+    }
     return false;
 }
 
@@ -146,67 +156,69 @@ bool ISCOptimizationClass::updateStates(gtsam::Values& result, int matched_id, i
 
 }
 bool ISCOptimizationClass::geometryConsistencyVerification(int current_id, int matched_id, Eigen::Isometry3d& transform){
-
+    pcl::PointCloud<pcl::PointXYZI>::Ptr map_surf_temp(new pcl::PointCloud<pcl::PointXYZI>());
+    pcl::PointCloud<pcl::PointXYZI>::Ptr map_edge_temp(new pcl::PointCloud<pcl::PointXYZI>());  
     pcl::PointCloud<pcl::PointXYZI>::Ptr map_surf(new pcl::PointCloud<pcl::PointXYZI>()); 
     pcl::PointCloud<pcl::PointXYZI>::Ptr map_edge(new pcl::PointCloud<pcl::PointXYZI>()); 
-    for(int i = -20; i <=20; i=i+5){
+
+    for(int i = -10; i <=10; i=i+5){
         if(matched_id+i>= current_id || matched_id+i<0)
             continue;
-
         Eigen::Isometry3d transform_pose = pose3ToEigen(pose_optimized_arr[matched_id+i]);
         pcl::PointCloud<pcl::PointXYZI>::Ptr transformed_temp(new pcl::PointCloud<pcl::PointXYZI>());
         pcl::transformPointCloud(*pointcloud_surf_arr[matched_id+i], *transformed_temp, transform_pose.cast<float>());
-        *map_surf+=*transformed_temp;
-        pcl::transformPointCloud(*pointcloud_edge_arr[matched_id+i], *transformed_temp, transform_pose.cast<float>());
-        *map_edge+=*transformed_temp;
+        *map_surf_temp+=*transformed_temp;
+        pcl::PointCloud<pcl::PointXYZI>::Ptr transformed_temp2(new pcl::PointCloud<pcl::PointXYZI>());
+        pcl::transformPointCloud(*pointcloud_edge_arr[matched_id+i], *transformed_temp2, transform_pose.cast<float>());
+        *map_edge_temp+=*transformed_temp2;
     }
 
     Eigen::Isometry3d transform_pose = pose3ToEigen(pose_optimized_arr[matched_id]);
-    pcl::transformPointCloud(*map_edge, *map_edge, transform_pose.cast<float>().inverse());
-    pcl::transformPointCloud(*map_surf, *map_surf, transform_pose.cast<float>().inverse());
-    //downsample
-    downSizeFilter.setInputCloud(map_surf);
-    downSizeFilter.filter(*map_surf);
-
+    pcl::transformPointCloud(*map_edge_temp, *map_edge, transform_pose.cast<float>().inverse());
+    pcl::transformPointCloud(*map_surf_temp, *map_surf, transform_pose.cast<float>().inverse());
+    //ROS_INFO("tag31");
+    pcl::PointCloud<pcl::PointXYZI>::Ptr current_scan_surf_temp(new pcl::PointCloud<pcl::PointXYZI>()); 
+    pcl::PointCloud<pcl::PointXYZI>::Ptr current_scan_edge_temp(new pcl::PointCloud<pcl::PointXYZI>()); 
     pcl::PointCloud<pcl::PointXYZI>::Ptr current_scan_surf(new pcl::PointCloud<pcl::PointXYZI>()); 
     pcl::PointCloud<pcl::PointXYZI>::Ptr current_scan_edge(new pcl::PointCloud<pcl::PointXYZI>()); 
     for(int i = 0; i <=0; i=i+3){
-        if(current_id+i<0)
+        if(current_id-i<0)
             continue;
         Eigen::Isometry3d transform_pose = pose3ToEigen(pose_optimized_arr[current_id+i]);
         pcl::PointCloud<pcl::PointXYZI>::Ptr transformed_temp(new pcl::PointCloud<pcl::PointXYZI>());
-        pcl::transformPointCloud(*pointcloud_surf_arr[current_id+i], *transformed_temp, transform_pose.cast<float>());
-        *current_scan_surf+=*transformed_temp;
-        pcl::transformPointCloud(*pointcloud_edge_arr[current_id+i], *transformed_temp, transform_pose.cast<float>());
-        *current_scan_edge+=*transformed_temp;
+        pcl::transformPointCloud(*pointcloud_surf_arr[current_id-i], *transformed_temp, transform_pose.cast<float>());
+        *current_scan_surf_temp+=*transformed_temp;
+        pcl::PointCloud<pcl::PointXYZI>::Ptr transformed_temp2(new pcl::PointCloud<pcl::PointXYZI>());
+        pcl::transformPointCloud(*pointcloud_edge_arr[current_id-i], *transformed_temp2, transform_pose.cast<float>());
+        *current_scan_edge_temp+=*transformed_temp2;
     }
 
     transform_pose = pose3ToEigen(pose_optimized_arr[current_id]);
-    pcl::transformPointCloud(*current_scan_edge, *current_scan_edge, transform_pose.cast<float>().inverse());
-    pcl::transformPointCloud(*current_scan_surf, *current_scan_surf, transform_pose.cast<float>().inverse());
-    //downsample
-    downSizeFilter.setInputCloud(current_scan_surf);
-    downSizeFilter.filter(*current_scan_surf);
+    pcl::transformPointCloud(*current_scan_edge_temp, *current_scan_edge, transform_pose.cast<float>().inverse());
+    pcl::transformPointCloud(*current_scan_surf_temp, *current_scan_surf, transform_pose.cast<float>().inverse());
 
-    //this is for visualization
+    //this is for visualization only
+    loop_candidate_pc->clear();
+    loop_map_pc->clear();
     transform_pose = transform;
     transform_pose.translation() = Eigen::Vector3d(0,0,10);
     pcl::PointCloud<pcl::PointXYZI>::Ptr cloud_temp(new pcl::PointCloud<pcl::PointXYZI>()); 
     pcl::transformPointCloud(*current_scan_surf, *loop_candidate_pc, transform_pose.cast<float>());
     pcl::transformPointCloud(*current_scan_edge, *cloud_temp, transform_pose.cast<float>());
     *loop_candidate_pc+=*cloud_temp;
-    loop_map_pc = map_surf;
+    *loop_map_pc += *map_surf;
     *loop_map_pc += *map_edge;
-
     double match_score = estimateOdom(map_edge,map_surf,current_scan_edge,current_scan_surf,transform);
     //ROS_WARN("matched score %f",match_score);
-    if(match_score < LOOPCLOSURE_THRESHOLD)
+
+    if(match_score < LOOPCLOSURE_THRESHOLD){
         return true;
+    }
     else{
         //ROS_INFO("loop rejected due to geometry verification current_id%d matched_id %d, score: %f",current_id,matched_id,match_score);
         return false;
     }
-
+ return false;
 }
 
 Eigen::Isometry3d ISCOptimizationClass::getLastPose(void){
@@ -224,7 +236,6 @@ double ISCOptimizationClass::estimateOdom(const pcl::PointCloud<pcl::PointXYZI>:
     double parameters[7] = {init_q.x(), init_q.y(), init_q.z(), init_q.w(),init_t.x(), init_t.y(), init_t.z()};
     Eigen::Map<Eigen::Quaterniond> q_temp = Eigen::Map<Eigen::Quaterniond>(parameters);
     Eigen::Map<Eigen::Vector3d> t_temp = Eigen::Map<Eigen::Vector3d>(parameters + 4);
-
     pcl::KdTreeFLANN<pcl::PointXYZI>::Ptr kdtreeCorner = pcl::KdTreeFLANN<pcl::PointXYZI>::Ptr(new pcl::KdTreeFLANN<pcl::PointXYZI>());
     pcl::KdTreeFLANN<pcl::PointXYZI>::Ptr kdtreeSurf = pcl::KdTreeFLANN<pcl::PointXYZI>::Ptr(new pcl::KdTreeFLANN<pcl::PointXYZI>());
     kdtreeCorner->setInputCloud(pc_source_edge);
@@ -241,7 +252,6 @@ double ISCOptimizationClass::estimateOdom(const pcl::PointCloud<pcl::PointXYZI>:
         Eigen::Affine3d transform = Eigen::Affine3d::Identity();
         transform.translation() = t_temp;
         transform.linear() = q_temp.toRotationMatrix();
-        
         //add edge cost factor
         int corner_num=0;
         pcl::PointCloud<pcl::PointXYZI>::Ptr tranformed_edge(new pcl::PointCloud<pcl::PointXYZI>());
@@ -250,7 +260,6 @@ double ISCOptimizationClass::estimateOdom(const pcl::PointCloud<pcl::PointXYZI>:
         {
             std::vector<int> pointSearchInd;
             std::vector<float> pointSearchSqDis;
-            
             kdtreeCorner->nearestKSearch(tranformed_edge->points[i], 5, pointSearchInd, pointSearchSqDis);
             if (pointSearchSqDis[4] < 2.0)
             {
@@ -292,9 +301,8 @@ double ISCOptimizationClass::estimateOdom(const pcl::PointCloud<pcl::PointXYZI>:
         }
         if(corner_num<20){
             ROS_INFO("not enough corresponding points");
-            return 300;
+            return 300.0;
         }
-
         //add surf cost factor
         int surf_num=0; 
         pcl::PointCloud<pcl::PointXYZI>::Ptr tranformed_surf(new pcl::PointCloud<pcl::PointXYZI>());
@@ -346,7 +354,7 @@ double ISCOptimizationClass::estimateOdom(const pcl::PointCloud<pcl::PointXYZI>:
 
         if(surf_num<20){
             ROS_INFO("not enough corresponding points");
-            return 300;
+            return 300.0;
         }
         ceres::Solver::Options options;
         options.linear_solver_type = ceres::DENSE_QR;
@@ -357,11 +365,9 @@ double ISCOptimizationClass::estimateOdom(const pcl::PointCloud<pcl::PointXYZI>:
         if(summary.final_cost<total_cost)
             total_cost = summary.final_cost;
     }
-
-    transform = Eigen::Isometry3d::Identity();
-
-    transform.rotate(q_temp);
-    transform.pretranslate(t_temp);
+    //transform = Eigen::Isometry3d::Identity();
+    transform.linear() = q_temp.toRotationMatrix();
+    transform.translation() = t_temp;
     return total_cost;
 
 }
