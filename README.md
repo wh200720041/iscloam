@@ -1,6 +1,7 @@
 # ISCLOAM 
 ## Intensity Scan Context based Full SLAM Implementation (ISC-LOAM) 
 
+This work is an implementation of paper "Intensity Scan Context: Coding Intensity and Geometry Relations for Loop Closure Detection" in IEEE International Conference on Robotics and Automation 2020 (ICRA)
 This work is 3D lidar based Simultaneous Localization And Mapping (SLAM), including both front-end and back-end SLAM, at 20Hz. 
 
 **Author:** [Wang Han](http://wanghan.pro), Nanyang Technological University, Singapore
@@ -117,7 +118,7 @@ You may use iscloam_velodyne.launch for your own velodyne sensor, such as Velody
 
 
 ## 6. Citation
-If you use this work for your research, please cite
+If you use this work for your research, you may want to cite
 ```
 @inproceedings{wang2020intensity,
   title={Intensity scan context: Coding intensity and geometry relations for loop closure detection},
