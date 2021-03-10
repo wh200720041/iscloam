@@ -1,7 +1,7 @@
 # ISCLOAM 
 ## Intensity Scan Context based Full SLAM Implementation (ISC-LOAM) 
 
-This work is an implementation of paper "Intensity Scan Context: Coding Intensity and Geometry Relations for Loop Closure Detection" in IEEE International Conference on Robotics and Automation 2020 (ICRA)
+This work is an implementation of paper "Intensity Scan Context: Coding Intensity and Geometry Relations for Loop Closure Detection" in IEEE International Conference on Robotics and Automation 2020 (ICRA) [paper](https://arxiv.org/pdf/2003.05656.pdf)
 This work is 3D lidar based Simultaneous Localization And Mapping (SLAM), including both front-end and back-end SLAM, at 20Hz. 
 
 **Author:** [Wang Han](http://wanghan.pro), Nanyang Technological University, Singapore
@@ -84,7 +84,7 @@ source ~/catkin_ws/devel/setup.bash
 
 
 ### 3.2 Download test rosbag
-Download [KITTI sequence 05](https://drive.google.com/open?id=18ilF7GZDg2tmT6sD5pd1RjqO0XJLn9Mv) or [KITTI sequence 07](https://drive.google.com/open?id=1VpoKm7f4es4ISQ-psp4CV3iylcA4eu0-)
+Download [KITTI sequence 05](https://drive.google.com/file/d/1eyO0Io3lX2z-yYsfGHawMKZa5Z0uYJ0W/view?usp=sharing) (10GB) or [KITTI sequence 07](https://drive.google.com/file/d/1_qUfwUw88rEKitUpt1kjswv7Cv4GPs0b/view?usp=sharing) (4GB)
 
 Unzip compressed file 2011_09_30_0018.zip. If your system does not have unzip. please install unzip by 
 ```
@@ -118,7 +118,7 @@ You may use iscloam_velodyne.launch for your own velodyne sensor, such as Velody
 
 
 ## 6. Citation
-If you use this work for your research, you may want to cite
+If you use this work for your research, you may want to cite the paper below, your citation will be appreciated 
 ```
 @inproceedings{wang2020intensity,
   title={Intensity scan context: Coding intensity and geometry relations for loop closure detection},
@@ -132,6 +132,5 @@ If you use this work for your research, you may want to cite
 
 ## 7.Acknowledgements
 Thanks for [A-LOAM](https://github.com/HKUST-Aerial-Robotics/A-LOAM) and LOAM(J. Zhang and S. Singh. LOAM: Lidar Odometry and Mapping in Real-time) and [LOAM_NOTED](https://github.com/cuitaixiang/LOAM_NOTED).
-
 
 
