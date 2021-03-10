@@ -10,6 +10,11 @@ For front-end only odometry, you may visit [FLOAM (fast lidar odometry and mappi
 ## 1. Evaluation
 ### 1.1. Demo
 Watch our demo at [Video Link](https://youtu.be/Kfi6CFK4Ke4)
+<p align='center'>
+<a href="https://youtu.be/0-plzzxibHA" target="_blank">
+<img width="65%" src="/img/iscloam_title.gif"/>
+</a>
+</p>
 
 ### 1.2. Mapping Example
 <p align='center'>
