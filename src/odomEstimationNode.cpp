@@ -127,8 +127,8 @@ void odom_estimation(){
 
             // publish odometry
             nav_msgs::Odometry laserOdometry;
-            laserOdometry.header.frame_id = "/world"; 
-            laserOdometry.child_frame_id = "/aft_mapped"; 
+            laserOdometry.header.frame_id = "world"; 
+            laserOdometry.child_frame_id = "aft_mapped"; 
             laserOdometry.header.stamp = pointcloud_time;
             laserOdometry.pose.pose.orientation.x = q_current.x();
             laserOdometry.pose.pose.orientation.y = q_current.y();

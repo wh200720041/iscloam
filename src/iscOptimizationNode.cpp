@@ -74,8 +74,8 @@ void odomCallback(const nav_msgs::Odometry::ConstPtr &msg)
 
     // publish odometry
     nav_msgs::Odometry laserOdometry;
-    laserOdometry.header.frame_id = "/map"; //world
-    laserOdometry.child_frame_id = "/odom_final"; //odom
+    laserOdometry.header.frame_id = "map"; //world
+    laserOdometry.child_frame_id = "odom_final"; //odom
     laserOdometry.header.stamp = msg->header.stamp;
     laserOdometry.pose.pose.orientation.x = q_temp.x();
     laserOdometry.pose.pose.orientation.y = q_temp.y();
