@@ -126,12 +126,14 @@ You may use iscloam_velodyne.launch for your own velodyne sensor, such as Velody
 If you use this work for your research, you may want to cite the paper below, your citation will be appreciated 
 ```
 @inproceedings{wang2020intensity,
-  title={Intensity scan context: Coding intensity and geometry relations for loop closure detection},
-  author={Wang, Han and Wang, Chen and Xie, Lihua},
-  booktitle={2020 IEEE International Conference on Robotics and Automation (ICRA)},
-  pages={2095--2101},
+  author={H. {Wang} and C. {Wang} and L. {Xie}},
+  booktitle={2020 IEEE International Conference on Robotics and Automation (ICRA)}, 
+  title={Intensity Scan Context: Coding Intensity and Geometry Relations for Loop Closure Detection}, 
   year={2020},
-  organization={IEEE}
+  volume={},
+  number={},
+  pages={2095-2101},
+  doi={10.1109/ICRA40945.2020.9196764}
 }
 ```
 
