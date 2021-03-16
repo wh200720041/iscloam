@@ -26,6 +26,15 @@
 #include "lidar.h"
 #include "odomEstimationClass.h"
 
+//declare var
+int init_flag=true;
+
+    Eigen::Matrix4f H;
+    Eigen::Matrix4f H_init;
+    Eigen::Matrix4f H_rot;
+
+std::string RESULT_PATH;
+
 OdomEstimationClass odomEstimation;
 std::mutex mutex_lock;
 std::queue<sensor_msgs::PointCloud2ConstPtr> pointCloudEdgeBuf;
@@ -138,6 +147,58 @@ void odom_estimation(){
             laserOdometry.pose.pose.position.y = t_current.y();
             laserOdometry.pose.pose.position.z = t_current.z();
             pubLaserOdometry.publish(laserOdometry);
+            
+            ///////////////////// KITTI format pose ///////////////////
+
+            Eigen::Matrix3d R = q_current.toRotationMatrix();
+
+            if (init_flag==true)
+            {
+
+            H_init<< R.row(0)[0],R.row(0)[1],R.row(0)[2],t_current.x(),
+                     R.row(1)[0],R.row(1)[1],R.row(1)[2],t_current.y(),
+                     R.row(2)[0],R.row(2)[1],R.row(2)[2],t_current.z(),
+                     0,0,0,1;
+
+            init_flag=false;
+
+            }
+
+            H_rot<<	0,-1,0,0, 
+                    0,0,-1,0,
+                    1,0,0,0,
+                    0,0,0,1;
+
+            H<<  R.row(0)[0],R.row(0)[1],R.row(0)[2],t_current.x(),
+                 R.row(1)[0],R.row(1)[1],R.row(1)[2],t_current.y(),
+                 R.row(2)[0],R.row(2)[1],R.row(2)[2],t_current.z(),
+                 0,0,0,1;
+
+            H = H_rot*H_init.inverse()*H; 
+
+            std::ofstream foutC(RESULT_PATH, std::ios::app);
+
+            foutC.setf(std::ios::scientific, std::ios::floatfield);
+            foutC.precision(6);
+
+            for (int i = 0; i < 3; ++i)
+            {
+                    for (int j = 0; j < 4; ++j)
+                    {
+                            if(i==2 && j==3)
+                            {
+                                    foutC <<H.row(i)[j]<< std::endl ;
+                            }
+                            else
+                            {
+                                    foutC <<H.row(i)[j]<< " " ;
+                            }
+                    }
+            }
+
+            foutC.close();
+
+        //////////////////////////////////////////////////
 
         }
         //sleep 2 ms every time
@@ -158,6 +219,7 @@ int main(int argc, char **argv)
     double min_dis = 2.0;
     double map_resolution = 0.4;
 
+    nh.getParam("RESULT_PATH", RESULT_PATH);
     nh.getParam("/scan_period", scan_period); 
     nh.getParam("/vertical_angle", vertical_angle); 
     nh.getParam("/max_dis", max_dis);
