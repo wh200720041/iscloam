@@ -54,7 +54,7 @@ Average rotation error : 0.000073
 
 ## 2. Prerequisites
 ### 2.1 **Ubuntu** and **ROS**
-Ubuntu 64-bit 18.04.
+Ubuntu 64-bit 20.04.
 
 ROS Noetic. [ROS Installation](http://wiki.ros.org/ROS/Installation)
 
